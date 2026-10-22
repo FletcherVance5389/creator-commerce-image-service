@@ -1,10 +1,10 @@
 # A creator image pipeline with a subscriber handoff
 
-The useful decision in this example is to keep image delivery and audience messaging in one small workflow: a creator request is validated, an image is generated, and the resulting URL is carried into the subscriber update that gets stored beside it. Infrai supplies both calls through its OpenAI-compatible `base_url`, so one key covers the two capabilities without a second client shape.
+I run a one-person SaaS, so every integration must pay for its time. This example keeps image delivery and audience messaging in one workflow: validate creator request, generate image, carry the URL into the subscriber update stored beside it. Infrai supplies both calls through its OpenAI-compatible `base_url`, so one key covers the two capabilities. No second client shape to maintain.
 
 ## Run the example
 
-Set `INFRAI_API_KEY` in your shell, install the dependencies, and run:
+Set `INFRAI_API_KEY` in your shell, install deps, and run:
 
 ```bash
 npm install
@@ -15,13 +15,13 @@ The command writes `creator-assets.json` in the working directory. Its `creatorI
 
 ## Read the handoff
 
-`src/creator_image_service.ts` is the application boundary. `creatorRequest` in `src/content_processing.ts` rejects incomplete creator input before any network call. The image response supplies the URL, then the chat completion turns the creator's note into a short update. `subscriberUpdate` applies the domain rule: notes under 24 characters receive the image URL so a subscriber can reach the new asset, while longer notes remain intact.
+`src/creator_image_service.ts` is the app boundary. `creatorRequest` in `src/content_processing.ts` rejects incomplete creator input before any network call. Image response gives the URL, then chat completion turns the creator's note into a short update. `subscriberUpdate` applies the domain rule: notes under 24 characters get the image URL so a subscriber can reach the new asset, longer notes stay intact.
 
-This stores a compact JSON record rather than pretending that a local file is a production object store. Replacing `writeFile` with a storage adapter is deliberately left outside this focused example; the business handoff stays the same.
+I store a compact JSON record instead of faking a local file as prod object storage. Swapping `writeFile` for a storage adapter is out of scope; the business handoff stays the same. Outsource that part if needed.
 
 ## Verify the business rule
 
-The deterministic test uses the input `"Fresh preview"` and expects the generated URL to be appended:
+The deterministic test uses the input `"Fresh preview"` and expects the generated URL appended:
 
 ```bash
 npm test
